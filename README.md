@@ -25,28 +25,56 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- The purpose of this game is to correctly guess the randomly selected secret number. 
+- Bugs that were found include:
+   1. Misleading Hints
+   2. Secret is a str
+   3. Out-of-range guesses
+   4. "New Game" not working
+   5. "New Game" ignored difficulty
+   6. Hard-coded prompt range
+   7. First game starts at 1 attempt
+   8. Wrong score in debug panel
+- How these bugs were fixed:
+   1. swapped the messages in check_guess so that too-high guesses output "Go LOWER" and too-low guesses output "Go HIGHER"
+   2. compare the guess against the integer secret
+   3. added a check for guesses using "is_in_range()"
+   4. "New Game" will reset attempts and other relevant game data
+   5. Make the new secret use the active difficulty's range
+   6. The prompt now shows the actual range for the chosen difficulty
+   7. Initialized attempts to 0 
+   8. Move the debug panel to the end of the script so it reflects the up-tp-date score
 
 ## 📸 Demo Walkthrough
 
 Describe your fixed game in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. User enters 70
+2. Hint says "Too High"
+3. User enters 25 -> "Too Low"
+4. Score updates correctly after each guess. 
+5. Game ends after the correct guess.
 
-**Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
+**Screenshot** *(optional)*: ![Winning game screen with final score](image.png)
 
 ## 🧪 Test Results
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
+collected 11 items                                                                                                 
+
+tests/test_game_logic.py::test_too_high_guess_says_go_lower PASSED                                           [  9%]
+tests/test_game_logic.py::test_too_low_guess_says_go_higher PASSED                                           [ 18%]
+tests/test_game_logic.py::test_correct_guess_wins PASSED                                                     [ 27%]
+tests/test_game_logic.py::test_single_digit_guess_below_secret_is_too_low PASSED                             [ 36%]
+tests/test_game_logic.py::test_double_digit_guess_above_secret_is_too_high PASSED                            [ 45%]
+tests/test_game_logic.py::test_guess_inside_range_is_valid PASSED                                            [ 54%]
+tests/test_game_logic.py::test_guess_at_boundaries_is_valid PASSED                                           [ 63%]
+tests/test_game_logic.py::test_guess_below_range_is_rejected PASSED                                          [ 72%]
+tests/test_game_logic.py::test_guess_above_range_is_rejected PASSED                                          [ 81%]
+tests/test_game_logic.py::test_difficulty_ranges PASSED                                                      [ 90%]
+tests/test_game_logic.py::test_unknown_difficulty_defaults_to_normal_range PASSED                            [100%]
+
+=============================================== 11 passed in 0.05s ================================================
 ```
 
 ## 🚀 Stretch Features
