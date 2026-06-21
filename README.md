@@ -77,6 +77,18 @@ tests/test_game_logic.py::test_unknown_difficulty_defaults_to_normal_range PASSE
 =============================================== 11 passed in 0.05s ================================================
 ```
 
+## Challenge 1 Test Results
+
+=================================================================== test session starts ====================================================================
+platform win32 -- Python 3.13.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: C:\Users\adami\OneDrive\Desktop\AI-110\ai110-module1show-gameglitchinvestigator-starter
+plugins: anyio-4.13.0
+collected 26 items                                                                                                                                          
+
+tests\test_game_logic.py ..........................                                                                                                   [100%]
+
+==================================================================== 26 passed in 0.06s ====================================================================
+
 ## 🚀 Stretch Features
 
 - [ ] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]

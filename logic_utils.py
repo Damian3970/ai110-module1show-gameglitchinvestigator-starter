@@ -18,7 +18,10 @@ def is_in_range(guess: int, low: int, high: int) -> bool:
 
 def parse_guess(raw: str):
     """
-    Parse user input into an int guess.
+    Parse user input into a whole-number guess.
+
+    Only whole numbers are accepted; decimals are rejected (the secret is
+    always an integer, so a fractional guess can never be correct).
 
     Returns: (ok: bool, guess_int: int | None, error_message: str | None)
     """
@@ -28,12 +31,12 @@ def parse_guess(raw: str):
     if raw == "":
         return False, None, "Enter a guess."
 
+    if "." in raw:
+        return False, None, "Please enter a whole number."
+
     try:
-        if "." in raw:
-            value = int(float(raw))
-        else:
-            value = int(raw)
-    except Exception:
+        value = int(raw)
+    except ValueError:
         return False, None, "That is not a number."
 
     return True, value, None
