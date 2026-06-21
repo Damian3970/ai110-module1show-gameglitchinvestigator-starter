@@ -71,3 +71,28 @@ def update_score(current_score: int, outcome: str, attempt_number: int):
         return current_score - 5
 
     return current_score
+
+
+def make_game_record(secret, guesses, status):
+    """
+    Build a summary of a finished game for the history log.
+
+    Stores a copy of the guesses so later changes to the live game's
+    history list cannot mutate the saved record.
+
+    Returns: {"secret": ..., "guesses": [...], "status": ...}
+    """
+    return {
+        "secret": secret,
+        "guesses": list(guesses),
+        "status": status,
+    }
+
+
+def outcome_label(status: str) -> str:
+    """Human-friendly label for a game's final status."""
+    if status == "won":
+        return "🎉 Won"
+    if status == "lost":
+        return "💀 Lost"
+    return "⏳ Abandoned"

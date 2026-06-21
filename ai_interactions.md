@@ -10,16 +10,17 @@
 
 **What task did you give the agent?**
 
-<!-- Describe the goal you asked the agent to accomplish -->
+I prompted Claude to "implement a feature such that it tracks guess history from previous games, showing the guesses for that game and the secret number". 
 
 **What did the agent do?**
 
-<!-- List the steps the agent took (files edited, commands run, etc.) -->
+1. Added function in logic_utils.py to create game record
+2. Added another function in the same file to display game status for past games (win vs. loss)
+3. Edited app.py to allow append previous match data in order when a new game is created
 
 **What did you have to verify or fix manually?**
 
-<!-- Describe anything the agent got wrong or that required human review -->
-
+I had to manually verify that the feature was successfully implemented. I played a few games and found a drop-down feature in the game that showed me previous games that I played, my guesses, and whether or not I guessed the secret number. 
 ---
 
 ## Test Generation (SF7)

@@ -7,6 +7,8 @@ from logic_utils import (
     parse_guess,
     check_guess,
     update_score,
+    make_game_record,
+    outcome_label,
 )
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
@@ -49,6 +51,9 @@ if "status" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
+if "past_games" not in st.session_state:
+    st.session_state.past_games = []
+
 st.subheader("Make a guess")
 
 st.info(
@@ -70,6 +75,16 @@ with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
 if new_game:
+    # Archive the game being left behind (only if it actually had guesses)
+    # so its guesses and secret are preserved in the history log.
+    if st.session_state.history:
+        st.session_state.past_games.append(
+            make_game_record(
+                st.session_state.secret,
+                st.session_state.history,
+                st.session_state.status,
+            )
+        )
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(low, high) #FIX: "New Game" considers difficulty range
     st.session_state.score = 0 #FIX: "New Game" resets game
@@ -130,6 +145,20 @@ with st.expander("Developer Debug Info"): #FIX: debug panel shows correct score
     st.write("Score:", st.session_state.score)
     st.write("Difficulty:", difficulty)
     st.write("History:", st.session_state.history)
+
+if st.session_state.past_games:
+    total_games = len(st.session_state.past_games)
+    with st.expander(f"📜 Previous Games ({total_games})"):
+        # Most recent game first.
+        for offset, game in enumerate(reversed(st.session_state.past_games)):
+            game_number = total_games - offset
+            guesses = ", ".join(str(g) for g in game["guesses"])
+            st.markdown(
+                f"**Game {game_number}** — "
+                f"Secret: `{game['secret']}` — "
+                f"{outcome_label(game['status'])}"
+            )
+            st.write("Guesses:", guesses)
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
