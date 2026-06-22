@@ -92,3 +92,11 @@ tests\test_game_logic.py ..........................                             
 ## 🚀 Stretch Features
 
 - [ ] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]
+
+Changes: 
+1. Color-coded Hot and Cold hints! 
+   - depending on how close you are to the secret, you will either see Hot, Warm, Cool, or Cold
+2. Session Summary Table!
+   - Allows you to see previous games with gusses and whether or not you correctly guessed the secret number
+
+![ui changes](image-1.png)

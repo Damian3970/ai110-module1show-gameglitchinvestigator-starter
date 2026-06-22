@@ -218,3 +218,70 @@ def outcome_label(status: str) -> str:
     if status == "lost":
         return "💀 Lost"
     return "⏳ Abandoned"
+
+
+def proximity_hint(guess, secret, low, high):
+    """Return a Hot/Cold closeness label and a Streamlit color for a guess.
+
+    Closeness is measured relative to the size of the playing range, so the
+    same gap feels "hotter" on a wide range than on a narrow one.
+
+    Args:
+        guess: The player's numeric guess.
+        secret: The secret number.
+        low: Lower bound of the range, inclusive.
+        high: Upper bound of the range, inclusive.
+
+    Returns:
+        tuple[str, str]: An ``(label, color)`` pair. ``label`` is an
+        emoji-prefixed closeness description; ``color`` is a Streamlit color
+        name such as ``green``, ``red``, ``orange``, ``blue``, or ``violet``.
+
+    Examples:
+        >>> proximity_hint(50, 50, 1, 100)
+        ('🎯 Exact!', 'green')
+        >>> proximity_hint(52, 50, 1, 100)
+        ('🔥 Hot', 'red')
+        >>> proximity_hint(1, 100, 1, 100)
+        ('🧊 Cold', 'violet')
+    """
+    distance = abs(guess - secret)
+    span = max(high - low, 1)
+    ratio = distance / span
+    if distance == 0:
+        return "🎯 Exact!", "green"
+    if ratio <= 0.10:
+        return "🔥 Hot", "red"
+    if ratio <= 0.25:
+        return "🌤️ Warm", "orange"
+    if ratio <= 0.50:
+        return "❄️ Cool", "blue"
+    return "🧊 Cold", "violet"
+
+
+def build_session_summary(past_games):
+    """Build a compact table of finished games for the session summary.
+
+    Args:
+        past_games: A list of game records as produced by
+            :func:`make_game_record`.
+
+    Returns:
+        list[dict]: One row per game with the keys ``"Game"``, ``"Secret"``,
+        ``"Guesses"`` (the number of guesses made), and ``"Result"`` (a label
+        from :func:`outcome_label`).
+
+    Examples:
+        >>> games = [{"secret": 7, "guesses": [3, 7], "status": "won"}]
+        >>> build_session_summary(games)
+        [{'Game': 1, 'Secret': 7, 'Guesses': 2, 'Result': '🎉 Won'}]
+    """
+    rows = []
+    for index, game in enumerate(past_games, start=1):
+        rows.append({
+            "Game": index,
+            "Secret": game["secret"],
+            "Guesses": len(game["guesses"]),
+            "Result": outcome_label(game["status"]),
+        })
+    return rows

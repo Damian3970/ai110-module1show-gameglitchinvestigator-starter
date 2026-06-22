@@ -9,6 +9,8 @@ from logic_utils import (
     update_score,
     make_game_record,
     outcome_label,
+    proximity_hint,
+    build_session_summary,
 )
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
@@ -120,6 +122,11 @@ elif submit:
         outcome, message = check_guess(guess_int, st.session_state.secret)
 
         if show_hint:
+            # Color-coded Hot/Cold closeness (display only).
+            label, color = proximity_hint(
+                guess_int, st.session_state.secret, low, high
+            )
+            st.markdown(f"### :{color}[{label}]")
             st.warning(message)
 
         st.session_state.score = update_score(
@@ -153,6 +160,9 @@ with st.expander("Developer Debug Info"):
     st.write("History:", st.session_state.history)
 
 if st.session_state.past_games:
+    st.subheader("📊 Session Summary")
+    st.table(build_session_summary(st.session_state.past_games))
+
     total_games = len(st.session_state.past_games)
     with st.expander(f"📜 Previous Games ({total_games})"):
         # Most recent game first.
