@@ -11,15 +11,15 @@ import sys
 # whether this file is run directly or via pytest.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from logic_utils import (
+from logic_utils import (  # noqa: E402  (import follows sys.path setup above)
     get_range_for_difficulty,
     is_in_range,
     check_guess,
     parse_guess,
 )
 
-# implement tests for each bug that was addressed
 
+# implement tests for each bug that was addressed
 # ---------------------------------------------------------------------------
 # Bug: reversed hints
 # "Too High" used to tell you to "Go HIGHER" (and vice versa). The hint must
@@ -129,12 +129,15 @@ def test_negative_secret_comparison_is_numeric():
 def test_positive_decimal_is_rejected():
     assert parse_guess("3.9") == (False, None, "Please enter a whole number.")
 
+
 def test_negative_decimal_is_rejected():
     assert parse_guess("-2.7") == (False, None, "Please enter a whole number.")
+
 
 def test_whole_valued_decimal_is_rejected():
     # Even "5.0" (equal to a whole number) is rejected for containing a ".".
     assert parse_guess("5.0") == (False, None, "Please enter a whole number.")
+
 
 # --- Extreme values ---------------------------------------------------------
 
@@ -148,7 +151,9 @@ def test_extremely_large_value_parses_but_is_out_of_range():
 def test_scientific_overflow_is_rejected_gracefully():
     # "1.0e999" contains a ".", so it's rejected as a non-whole number
     # rather than ever reaching int(float(...)) and overflowing.
-    assert parse_guess("1.0e999") == (False, None, "Please enter a whole number.")
+    assert parse_guess("1.0e999") == (
+        False, None, "Please enter a whole number."
+    )
 
 
 def test_is_in_range_handles_extremes():
@@ -171,7 +176,9 @@ def test_plus_sign_and_leading_zeros_accepted():
 
 def test_scientific_notation_with_dot_is_rejected():
     # Contains a ".", so it's rejected as a non-whole number (was 150 before).
-    assert parse_guess("1.5e2") == (False, None, "Please enter a whole number.")
+    assert parse_guess("1.5e2") == (
+        False, None, "Please enter a whole number."
+    )
 
 
 def test_scientific_notation_without_dot_is_rejected():

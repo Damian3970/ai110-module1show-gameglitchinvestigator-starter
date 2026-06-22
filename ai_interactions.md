@@ -50,18 +50,63 @@ I had to manually verify that the feature was successfully implemented. I played
 **Prompt used:**
 
 ```
-<!-- Paste the prompt you gave the AI -->
+now, review the code for PEP 8 style compliance and apply its suggestions to resolve any formatting or naming issues it identifies
+
 ```
 
 **Linting output before:**
 
+(Tool used: `pycodestyle`, run with
+`python -m pycodestyle app.py logic_utils.py tests/test_game_logic.py`)
+
 ```
-<!-- Paste relevant linter warnings/errors -->
+app.py:43:34: E261 at least two spaces before inline comment
+app.py:43:35: E262 inline comment should start with '# '
+app.py:60:49: E261 at least two spaces before inline comment
+app.py:60:50: E262 inline comment should start with '# '
+app.py:89:56: E261 at least two spaces before inline comment
+app.py:89:57: E262 inline comment should start with '# '
+app.py:90:31: E261 at least two spaces before inline comment
+app.py:90:32: E262 inline comment should start with '# '
+app.py:109:48: E261 at least two spaces before inline comment
+app.py:109:49: E262 inline comment should start with '# '
+app.py:115:75: E261 at least two spaces before inline comment
+app.py:115:76: E262 inline comment should start with '# '
+app.py:115:101: E501 line too long (115 > 100 characters)
+app.py:142:42: E261 at least two spaces before inline comment
+app.py:142:43: E262 inline comment should start with '# '
+logic_utils.py:1:1: E265 block comment should start with '# '
+tests/test_game_logic.py:14:1: E402 module level import not at top of file
+tests/test_game_logic.py:29:1: E302 expected 2 blank lines, found 1
+tests/test_game_logic.py:132:1: E302 expected 2 blank lines, found 1
+tests/test_game_logic.py:135:1: E302 expected 2 blank lines, found 1
+tests/test_game_logic.py:141:1: E302 expected 2 blank lines, found 1
+tests/test_game_logic.py:191:72: W292 no newline at end of file
+
+(A second pass at PEP 8's strict 79-char limit also flagged 6 more
+E501 "line too long" warnings, all 80-85 characters.)
+```
+
+**Linting output after:**
+
+```
+$ python -m pycodestyle app.py logic_utils.py tests/test_game_logic.py
+(no output — 0 violations)
 ```
 
 **Changes applied:**
 
-<!-- Describe what you changed based on the AI's suggestions -->
+- **E261 / E262 (inline comments):** reformatted the `#FIX:` notes to the
+  PEP 8 style `  # FIX:` (two spaces before the `#`, one space after).
+- **E265 (block comment):** fixed the top-of-file `#FIX:` comment to `# FIX:`.
+- **E501 (line too long):** moved long inline `# FIX:` comments onto their own
+  line above the code, and wrapped two long test `assert` statements.
+- **E302 (blank lines):** restored two blank lines between test functions.
+- **E402 (import not at top):** the `logic_utils` import must come after the
+  `sys.path` setup, so I added `# noqa: E402` with an explanatory note rather
+  than reordering (which would break the import).
+- **W292 (newline at EOF):** added the missing trailing newline.
+- **Naming:** no changes needed — all names already use `snake_case`.
 
 ---
 

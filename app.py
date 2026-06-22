@@ -40,7 +40,8 @@ if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
 if "attempts" not in st.session_state:
-    st.session_state.attempts = 0 #FIX: consistent attempt counter for first game and new games
+    # FIX: consistent counter for first and new games
+    st.session_state.attempts = 0
 
 if "score" not in st.session_state:
     st.session_state.score = 0
@@ -56,8 +57,9 @@ if "past_games" not in st.session_state:
 
 st.subheader("Make a guess")
 
+# FIX: range shown is no longer hardcoded
 st.info(
-    f"Guess a number between {low} and {high}. " #FIX: range is no longer hardcoded
+    f"Guess a number between {low} and {high}. "
     f"Attempts left: {attempt_limit - st.session_state.attempts}"
 )
 
@@ -86,8 +88,9 @@ if new_game:
             )
         )
     st.session_state.attempts = 0
-    st.session_state.secret = random.randint(low, high) #FIX: "New Game" considers difficulty range
-    st.session_state.score = 0 #FIX: "New Game" resets game
+    # FIX: "New Game" now respects the difficulty range and fully resets state
+    st.session_state.secret = random.randint(low, high)
+    st.session_state.score = 0
     st.session_state.status = "playing"
     st.session_state.history = []
     st.success("New game started.")
@@ -106,13 +109,15 @@ elif submit:
     if not ok:
         st.session_state.history.append(raw_guess)
         st.error(err)
-    elif not is_in_range(guess_int, low, high): #FIX: out-of-range guesses no longer accepted
+    # FIX: reject out-of-range guesses
+    elif not is_in_range(guess_int, low, high):
         st.session_state.history.append(guess_int)
         st.error(f"Guess must be between {low} and {high}.")
     else:
         st.session_state.history.append(guess_int)
 
-        outcome, message = check_guess(guess_int, st.session_state.secret) #FIX: now passes the int secret directly
+        # FIX: now passes the int secret directly (no more str() cast)
+        outcome, message = check_guess(guess_int, st.session_state.secret)
 
         if show_hint:
             st.warning(message)
@@ -139,7 +144,8 @@ elif submit:
                     f"Score: {st.session_state.score}"
                 )
 
-with st.expander("Developer Debug Info"): #FIX: debug panel shows correct score
+# FIX: debug panel shows correct score
+with st.expander("Developer Debug Info"):
     st.write("Secret:", st.session_state.secret)
     st.write("Attempts:", st.session_state.attempts)
     st.write("Score:", st.session_state.score)
